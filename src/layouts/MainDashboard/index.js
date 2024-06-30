@@ -26,8 +26,8 @@ function MainDashboard() {
     const getImageList = async () => {
       const result = await getImageListInfo();
       if (result) {
-        setImageList(result.data.image_list);
-        setCount(result.data.counts);
+        setImageList(result?.data?.image_list || []);
+        setCount(result?.data?.counts || {});
       }
     };
 
@@ -45,10 +45,10 @@ function MainDashboard() {
                 color="dark"
                 icon={<Weekend fontSize="medium" color="inherit" />}
                 title="Today Count"
-                count={count.today}
+                count={count?.today || 0}
                 percentage={{
                   color: "success",
-                  amount: count.today,
+                  amount: count?.today || 0,
                   label: "added today",
                 }}
               />
@@ -59,10 +59,10 @@ function MainDashboard() {
               <ComplexStatisticsCard
                 icon={<Leaderboard fontSize="medium" color="inherit" />}
                 title="Yesterday Count"
-                count={count.yesterday}
+                count={count?.yesterday || 0}
                 percentage={{
                   color: "success",
-                  amount: count.yesterday,
+                  amount: count?.yesterday || 0,
                   label: "added yesterday",
                 }}
               />
@@ -74,10 +74,10 @@ function MainDashboard() {
                 color="success"
                 icon={<Store fontSize="medium" color="inherit" />}
                 title="Last week"
-                count={count.last_week}
+                count={count?.last_week || 0}
                 percentage={{
                   color: "success",
-                  amount: count.last_week,
+                  amount: count?.last_week || 0,
                   label: "added last week",
                 }}
               />
@@ -89,10 +89,10 @@ function MainDashboard() {
                 color="primary"
                 icon={<PersonAdd fontSize="medium" color="inherit" />}
                 title="Last Month"
-                count={count.last_month}
+                count={count?.last_month || 0}
                 percentage={{
                   color: "success",
-                  amount: count.last_month,
+                  amount: count?.last_month || 0,
                   label: "added last month",
                 }}
               />

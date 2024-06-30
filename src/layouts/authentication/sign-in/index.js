@@ -17,11 +17,10 @@ import { setIsAuth } from "context";
 
 function Basic(props) {
   const [controller, dispatch] = useMaterialUIController();
-  const {
-    isAuth,
-  } = controller;
+  const { isAuth } = controller;
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
@@ -29,15 +28,19 @@ function Basic(props) {
   const handleLoading = () => {
     setLoading(!loading);
   };
-  
+
   useEffect(() => {
-    if(isAuth) {
-      navigate('/dashboard')
+    if (isAuth) {
+      navigate("/dashboard");
     }
-  }, [isAuth])
+  }, [isAuth]);
 
   const onLogin = async (email, password) => {
-    return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {email, password}, { withCredentials: true });
+    return await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/api/auth/login`,
+      { email, password },
+      { withCredentials: true }
+    );
   };
 
   const handleChange = (event, type) => {
@@ -50,12 +53,17 @@ function Basic(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = await onLogin(email, password);
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user.data))
+    setIsAuth(dispatch, false);
+    try {
+      const user = await onLogin(email, password);
+      setError("");
+      localStorage.setItem("user", JSON.stringify(user.data));
       handleLoading();
-      setIsAuth(dispatch, true)
-      navigate('/dashboard')
+      setIsAuth(dispatch, true);
+      navigate("/dashboard");
+    } catch (e) {
+      console.log(e)
+      setError(e.response.data.error);
     }
   };
 
@@ -122,7 +130,7 @@ function Basic(props) {
             </MDBox>
             <MDBox display="flex" justifyContent="center">
               <MDTypography variant="button" fontWeight="regular" color="error">
-                {props.error}
+                {error}
               </MDTypography>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
